@@ -12,7 +12,9 @@ app.set("view engine", "ejs")
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
+
 };
+
 // req = request sent by client
 // res = response sent by us (the server)
 
@@ -36,24 +38,28 @@ app.get("/urls/new", (req, res) => {
 
 
 
-app.get("/urls/:id", (req, res) => {
-  let templateVars = { shorturl: req.params.id, urls: urlDatabase };
-  res.render("urls_show", templateVars);
-})
+
 //above :id value in the quotations allows us to input the id in the
 //browser and pull up the corrisponding website to that shortened url.
-
+//NOTE: shorturl and urls are variables that can be referenced in the urls_shows ejs file.
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
-  res.send("helloooooooo");         // Respond with 'Ok' (we will replace this)
+  console.log(req.body);
+  RandomNumber = generateRandomString()
+  urlDatabase[RandomNumber] = req.body.longURL
+  console.log(urlDatabase)
+  console.log(req.body.longURL)
+    // debug statement to see POST parameters
+  res.send(`http://localhost:8080/urls/${RandomNumber}`);         // Respond with 'Ok' (we will replace this)
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  let shortURL = req.params['shortURL']
+  let longURL = urlDatabase['shortURLKey']
+  res.redirect(longURL);
 });
 
 app.get("/", (req, res) => {
   res.send("Hello!");
-})
-
-app.get("/cars", (req, res) => {
-  res.send("Hello! CARS!");
 })
 
 
@@ -61,7 +67,21 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 })
 
+app.get("/urls/:id", (req, res) => {
+  let templateVars = { shorturl: req.params.id, urls: urlDatabase };
+  res.render("urls_show", templateVars);
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 })
+
+function generateRandomString() {
+  var text = "";
+  var charset = "abcdefghijklmnopqrstuvwxyz";
+
+  for (var i = 0; i < 6; i++)
+  text += charset.charAt(Math.floor(Math.random() * charset.length));
+  return text;
+}
+
