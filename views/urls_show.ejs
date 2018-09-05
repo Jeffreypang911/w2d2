@@ -8,12 +8,16 @@
 <body>
 
 <ul>
-    <% for(var value in urls) { %>
-    <% if(value === shorturl) { %>
-    <li> <%= urls[value] %></li>
-    <li> <%= value %></li>
-    <% }; %>
-    <% }; %>
+    <li>Your Website is :
+     <%= longurl %> </li>
+    <li> Your Short url is :
+    <%= shorturl %> </li>
+
+      <form method="POST" action="/urls/<%= shorturl %>/edit">
+      <label for="longURL">Change URL to:</label>
+      <input id="longURL" type="text" name="editURL" style="width: 100px">
+      <input type="submit" value="Change URL" name="longURL" >
+</form>
 </ul>
 </body>
 </html>

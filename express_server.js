@@ -12,7 +12,6 @@ app.set("view engine", "ejs")
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
-
 };
 
 // req = request sent by client
@@ -37,39 +36,56 @@ app.get("/urls/new", (req, res) => {
 //the above renders out the urls_new ejs file with the forum
 
 
+app.get("/urls/:id", (req, res) => {
+  let templateVars = { shorturl: req.params.id, longurl: urlDatabase[req.params.id] };
+  res.render("urls_show", templateVars);
+});
 
+app.post("/urls/:id", (req, res) => {
+  let templateVars = { shorturl: req.params.id, longurl: urlDatabase[req.params.id] };
+  res.render("urls_show", templateVars);
+});
 
 //above :id value in the quotations allows us to input the id in the
 //browser and pull up the corrisponding website to that shortened url.
 //NOTE: shorturl and urls are variables that can be referenced in the urls_shows ejs file.
 app.post("/urls", (req, res) => {
-  console.log(req.body);
   RandomNumber = generateRandomString()
   urlDatabase[RandomNumber] = req.body.longURL
   console.log(urlDatabase)
-  console.log(req.body.longURL)
-    // debug statement to see POST parameters
-  res.send(`http://localhost:8080/urls/${RandomNumber}`);         // Respond with 'Ok' (we will replace this)
+  res.redirect(`http://localhost:8080/urls/${RandomNumber}`);         // Respond with 'Ok' (we will replace this)
 });
+//above uses values longURL from the urls_new EJS file.
+//calls RandomNumber function and then creates "Random Number" key inside
+//Database. Then assigns req.body.longURL to that key value.
+app.post("/urls/:id/edit", (req, res) => {
+  urlDatabase[req.params.id] = req.body.editURL
+  console.log(urlDatabase)
+
+  res.redirect(`http://localhost:8080/urls/`)
+});
+
+
 
 app.get("/u/:shortURL", (req, res) => {
-  let shortURL = req.params['shortURL']
-  let longURL = urlDatabase['shortURLKey']
-  res.redirect(longURL);
+  var tinyURL = req.params.shortURL
+  var longURL = urlDatabase[tinyURL]
+  res.redirect(`http://${longURL}`);
 });
-
-app.get("/", (req, res) => {
-  res.send("Hello!");
-})
-
+//above redirects to website
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 })
 
-app.get("/urls/:id", (req, res) => {
-  let templateVars = { shorturl: req.params.id, urls: urlDatabase };
-  res.render("urls_show", templateVars);
+// app.post("/urls/edit", (req, res) => {
+// }) EDIT POST
+
+app.post("/urls/:id/delete", (req, res) => {
+  let tinyURL = req.params.id
+  console.log(tinyURL)
+  delete urlDatabase[tinyURL];
+  res.redirect("/urls");
 })
 
 app.listen(PORT, () => {

@@ -8,10 +8,16 @@
 
 <ul>
     <% for(var value in urls) { %>
-        <li> <%= urls[value] %> <%= value %></li>
+        <li> <b>Long URL: </b><%= urls[value] %> <b> Short URL: </b><%= value %>
+
+        <form method="POST" action="/urls/<%= value %>/delete">
+        <button type="submit">DELETE URL</button></form>
+
+        <form method="POST" action="/urls/<%= value %>">
+        <button type="submit">EDIT URL</button></form> </li>
     <% }; %>
 </ul>
 
-    <img src="https://i.imgflip.com/ovg15.jpg">
+
 </body>
 </html>
