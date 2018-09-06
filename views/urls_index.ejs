@@ -5,10 +5,10 @@
   <title>TinyApp</title>
 </head>
 <body>
-
+<% include partials/_header %>
 <ul>
     <% for(var value in urls) { %>
-        <li> <b>Long URL: </b><%= urls[value] %> <b> Short URL: </b><%= value %>
+        <li> <b>Long URL: </b> <%= urls[value] %> <b> Short URL: </b><%= value %>
 
         <form method="POST" action="/urls/<%= value %>/delete">
         <button type="submit">DELETE URL</button></form>

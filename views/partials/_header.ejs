@@ -1,5 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>lhaesljkagknjngwfkjae</title>
+  <title>Welcome to the URL thingy thing</title>
 </head>
+<body>
+
+
+  <%if(username) {%>
+  <form method="POST" action="/logout" >
+  <b>User Name:</b> <%=username%><br>
+  <input type="submit" value="Log Out">
+  </form>
+
+  <%} else {%>
+  <form method="POST" action="login" >
+  <input type="text" name="username">
+  <input type="submit" value="Log In">
+<%}%>
+  </form>
+  <title>Welcome to the URL thingy thing</title>
+</body>
+
+
+
