@@ -11,13 +11,17 @@
     <li>Your Website is :
      <%= longurl %> </li>
     <li> Your Short url is :
-    <%= shorturl %> </li>
+    localhost:8080/u/<%= shorturl %> </li>
 
       <form method="POST" action="/urls/<%= shorturl %>/edit">
       <label for="longURL">Change URL to:</label>
       <input id="longURL" type="text" name="editURL" style="width: 100px">
       <input type="submit" value="Change URL" name="longURL" >
-</form>
+      </form>
+
+      <form method="GET" action="/urls">
+      <input type="submit" value="Back to all URLs" name="longURL" >
+      </form>
 </ul>
 </body>
 </html>
