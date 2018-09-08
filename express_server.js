@@ -11,9 +11,20 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs")
 
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {
+    id: "userRandomID",
+    longURL: "http://www.lighthouselabs.ca"
+  },
+  "9sm5xK": {
+    id: "userRandomID2",
+    longURL: "http://www.google.com"
+  }
 };
+
+// var urlDatabase = {
+//   "b2xVn2": "http://www.lighthouselabs.ca",
+//   "9sm5xK": "http://www.google.com"
+// };
 
 const users = {
   "userRandomID": {
@@ -26,51 +37,69 @@ const users = {
     email: "user2@example.com",
     password: "dishwasher-funk"
   }
-}
+};
 
 
 // root handlers/endpoints
 app.get("/urls", (req, res) => {
-
-  let templateVars = {urls: urlDatabase, userID: users[req.cookies.user_id]};
-
+  console.log(urlsForUser(req.cookies.user_id))
+  let templateVars = {urls: urlsForUser(req.cookies.user_id), userID: users[req.cookies.user_id]};
+  if (!req.cookies.user_id) {
+    res.render("urls_home", templateVars);
+  } else {
   res.render("urls_index", templateVars);
-  })
+  }
+
+})
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {userID: users[req.cookies.user_id]}
+  if (!req.cookies.user_id) {
+    res.render("urls_home", templateVars);
+  } else {
   res.render("urls_new", templateVars);
+  }
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shorturl: req.params.id, longurl: urlDatabase[req.params.id], userID: users[req.cookies.user_id]};
+  let templateVars = { shorturl: req.params.id, longurl: urlDatabase[req.params.id]['longURL'], userID: users[req.cookies.user_id]};
+  if (!req.cookies.user_id) {
+    res.render("urls_home", templateVars);
+  } else {
   res.render("urls_show", templateVars);
+  }
 });
 
 app.post("/urls/:id", (req, res) => {
-  let templateVars = { shorturl: req.params.id, longurl: urlDatabase[req.params.id], userID: users[req.cookies.user_id]};
+  let templateVars = { shorturl: req.params.id, longurl: urlDatabase[req.params.id]['longURL'], userID: users[req.cookies.user_id]};
+    if (!req.cookies.user_id) {
+    res.render("urls_home", templateVars);
+  } else {
   res.render("urls_show", templateVars);
+  }
 });
 //above :id value in the quotations allows us to input the id in the
 //browser and pull up the corrisponding website to that shortened url.
 //NOTE: shorturl and urls are variables that can be referenced in the urls_shows ejs file.
 app.post("/urls", (req, res) => {
   randomNumber = generateRandomString()
-  urlDatabase[randomNumber] = req.body.longURL
+  urlDatabase[randomNumber] = {
+                               id: req.cookies.user_id,
+                               longURL: req.body.longURL}
   res.redirect(`http://localhost:8080/urls/${randomNumber}`);
 });
 //above uses values longURL from the urls_new EJS file.
 //calls RandomNumber function and then creates "Random Number" key inside
 //Daatbase. Then assigns req.body.longURL to that key value.
 app.post("/urls/:id/edit", (req, res) => {
-  urlDatabase[req.params.id] = req.body.editURL
+  urlDatabase[req.params.id]['longURL'] = req.body.editURL
   res.redirect(`http://localhost:8080/urls/`)
 });
 //redirects website
 app.get("/u/:shortURL", (req, res) => {
   var tinyURL = req.params.shortURL
-  var longURL = urlDatabase[tinyURL]
-  res.redirect(`${longURL}`);
+  var longURL = urlDatabase[tinyURL]['longURL']
+  res.redirect(longURL);
 });
 
 app.get("/urls.json", (req, res) => {
@@ -128,7 +157,6 @@ app.post("/register", (req, res) => {
   let auth = false;
 
   if(!username||!password) {
-    console.log('step 1')
     let errorMessage = !password ? 'Please enter password.' : 'Please enter email.'
     return res.status(400).send(errorMessage)
   }
@@ -170,10 +198,21 @@ app.listen(PORT, () => {
 
 function generateRandomString() {
   var text = "";
-  var charset = "abcdefghijklmnopqrstuvwxyz";
+  var charset = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   for (var i = 0; i < 6; i++)
   text += charset.charAt(Math.floor(Math.random() * charset.length));
   return text;
+}
+
+function urlsForUser(id){
+ let sortedURLDatabase = {}
+ for (let key in urlDatabase) {
+  if (urlDatabase[key].id === id){
+    sortedURLDatabase[key] = urlDatabase[key]
+    }
+  }
+ return sortedURLDatabase
+ console.log(sortedURLDatabase)
 }
 

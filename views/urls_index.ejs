@@ -13,13 +13,14 @@
     </form></li>
     <br>
     <% for(var value in urls) { %>
-        <li> <b>Long URL: </b> <%= urls[value] %> <b> Short URL: </b>localhost:8080/u/<%= value %>
+        <li> <b>Long URL: </b> <%= urls[value].longURL %> <br> <b> Short URL: </b>localhost:8080/u/<%= value %>
 
         <form method="POST" action="/urls/<%= value %>/delete">
         <button type="submit">DELETE URL</button></form>
 
         <form method="POST" action="/urls/<%= value %>">
         <button type="submit">EDIT URL</button></form> </li>
+        <br>
     <% }; %>
 
 
