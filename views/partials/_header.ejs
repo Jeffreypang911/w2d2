@@ -1,5 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>lhaesljkagknjngwfkjae</title>
+  <title>Welcome to the URL thingy thing</title>
 </head>
+<body>
+
+
+  <%if(userID) {%>
+  <form method="POST" action="/logout" >
+  <b>User:</b> <%=userID.email%><br>
+  <input type="submit" value="Log Out">
+  </form>
+
+  <%} else {%>
+  <form method="GET" action="login" >
+  <input type="submit" value="Log In">
+  </form>
+
+  <form method="GET" action="register" >
+  <input type="submit" value="Register">
+  </form>
+<%}%>
+
+  <title>Welcome to the URL thingy thing</title>
+</body>
+
+
+
